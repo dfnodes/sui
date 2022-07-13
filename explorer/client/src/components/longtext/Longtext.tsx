@@ -115,7 +115,8 @@ function Longtext({
 
     return (
         <>
-            {textComponent}&nbsp;{icon}
+            {textComponent}
+            {icon}
         </>
     );
 }
