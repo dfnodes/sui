@@ -68,9 +68,7 @@ impl SuiAuthoritySignature for AuthoritySignature {
         T: Signable<Vec<u8>>,
     {
         // is this a cryptographically valid public Key?
-        let public_key: PublicKey = author
-            .try_into()
-            .map_err(|_| SuiError::InvalidAddress)?;
+        let public_key: PublicKey = author.try_into().map_err(|_| SuiError::InvalidAddress)?;
 
         // serialize the message (see BCS serialization for determinism)
         let mut message = Vec::new();
@@ -225,9 +223,8 @@ impl Signature {
         T: Signable<Vec<u8>>,
     {
         // Is this signature emitted by the expected author?
-        let public_key_bytes: PublicKeyBytes = PublicKeyBytes::from_bytes(self
-            .public_key_bytes())
-            .expect("byte lengths match");
+        let public_key_bytes: PublicKeyBytes =
+            PublicKeyBytes::from_bytes(self.public_key_bytes()).expect("byte lengths match");
 
         let received_addr = SuiAddress::from(public_key_bytes);
         if received_addr != author {
@@ -550,14 +547,8 @@ impl<S: AggregateAuthenticator> VerificationObligation<S> {
     pub fn verify_all(self) -> SuiResult<PubKeyLookup<S::PubKey>> {
         S::batch_verify(
             &self.signatures[..],
-            &self.public_keys
-                .iter()
-                .map(|x| &x[..])
-                .collect::<Vec<_>>(),
-            &self.messages
-                .iter()
-                .map(|x| &x[..])
-                .collect::<Vec<_>>()[..]
+            &self.public_keys.iter().map(|x| &x[..]).collect::<Vec<_>>(),
+            &self.messages.iter().map(|x| &x[..]).collect::<Vec<_>>()[..],
         )
         .map_err(|error| SuiError::InvalidSignature {
             error: format!("{error}"),

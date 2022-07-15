@@ -136,7 +136,7 @@ fn test_certificates() {
         .append(v2.auth_sign_info.authority, v2.auth_sign_info.signature)
         .unwrap()
         .unwrap();
-        
+
     assert!(c.verify(&committee).is_ok());
 
     let mut builder = SignatureAggregator::try_new(transaction, &committee).unwrap();
